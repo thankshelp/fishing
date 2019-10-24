@@ -1,0 +1,19 @@
+﻿<Window x:Class="fishing.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:fishing"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="1018" Width="1000">
+    <Grid>
+
+        <Canvas x:Name="scene" HorizontalAlignment="Left" Height="1000" Margin="-4,-4,-2.4,0" VerticalAlignment="Top" Width="1000">
+            <Button x:Name="start" Content="Start" HorizontalAlignment="Left" VerticalAlignment="Top" Width="121" Click="start_Click" Canvas.Left="58" Canvas.Top="51" Height="32"/>
+            <Canvas.Background>
+                <ImageBrush ImageSource="image/fish_fon.jpg"/>
+            </Canvas.Background>
+        </Canvas>
+
+    </Grid>
+</Window>
