@@ -12,3 +12,17 @@ C:\Users\Виктория\source\repos\fishing\fishing\obj\Debug\fishing.Propert
 C:\Users\Виктория\source\repos\fishing\fishing\obj\Debug\fishing.csproj.GenerateResource.cache
 C:\Users\Виктория\source\repos\fishing\fishing\obj\Debug\fishing.exe
 C:\Users\Виктория\source\repos\fishing\fishing\obj\Debug\fishing.pdb
+C:\Users\Виктория\Desktop\fishing\fishing\bin\Debug\fishing.exe.config
+C:\Users\Виктория\Desktop\fishing\fishing\bin\Debug\fishing.exe
+C:\Users\Виктория\Desktop\fishing\fishing\bin\Debug\fishing.pdb
+C:\Users\Виктория\Desktop\fishing\fishing\obj\Debug\fishing.csprojAssemblyReference.cache
+C:\Users\Виктория\Desktop\fishing\fishing\obj\Debug\MainWindow.g.cs
+C:\Users\Виктория\Desktop\fishing\fishing\obj\Debug\App.g.cs
+C:\Users\Виктория\Desktop\fishing\fishing\obj\Debug\fishing_MarkupCompile.cache
+C:\Users\Виктория\Desktop\fishing\fishing\obj\Debug\fishing_MarkupCompile.lref
+C:\Users\Виктория\Desktop\fishing\fishing\obj\Debug\MainWindow.baml
+C:\Users\Виктория\Desktop\fishing\fishing\obj\Debug\fishing.g.resources
+C:\Users\Виктория\Desktop\fishing\fishing\obj\Debug\fishing.Properties.Resources.resources
+C:\Users\Виктория\Desktop\fishing\fishing\obj\Debug\fishing.csproj.GenerateResource.cache
+C:\Users\Виктория\Desktop\fishing\fishing\obj\Debug\fishing.exe
+C:\Users\Виктория\Desktop\fishing\fishing\obj\Debug\fishing.pdb
