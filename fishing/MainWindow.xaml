@@ -7,7 +7,7 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="1018" Width="1000">
     <Grid>
-        <Grid x:Name="menu">
+        <Grid x:Name="menu" HorizontalAlignment="Left" Height="1000" Margin="-4,-4,-2.4,0" VerticalAlignment="Top" Width="1000" Visibility="Visible">
         <Grid.Background>
             <ImageBrush ImageSource="image/fish_fon.jpg"/>
         </Grid.Background>
@@ -29,7 +29,7 @@
             </Canvas.Background>
         </Canvas>
     </Grid>
-    
-    
-    
+
+   
+
 </Window>

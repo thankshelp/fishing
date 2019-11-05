@@ -12,7 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using System.Xml;
+using System.Xml.Linq;
 
 
 namespace fishing
@@ -25,8 +25,8 @@ namespace fishing
         //условие изменения направления и пофиксить штуку с расстоянием
         public class SPoint
         {
-            public int X;
-            public int Y;
+            public int X { get; set; }
+            public int Y { get; set; }
 
             public SPoint()
             {
@@ -48,10 +48,10 @@ namespace fishing
             public SPoint finpos = new SPoint();
             public SPoint strpos = new SPoint(); 
             public SPoint dir = new SPoint();  
-            Rectangle fsh;
+            Rectangle fsh { get; set; }
             ImageBrush ib = new ImageBrush();
-            int kl;
-            int speed;
+            int kl { get; set; }
+            int speed { get; set; }
             
             public fish(int x, int y, int sp, ref Canvas scene)
             {
@@ -141,6 +141,7 @@ namespace fishing
         seaweed w;
         Random rnd = new Random();
         int klw, kof, kbf, spof, spbf, round;
+        
 
         System.Windows.Threading.DispatcherTimer Timer;
         public MainWindow()
@@ -160,14 +161,31 @@ namespace fishing
             if (klw == 0)
             {
                 Timer.Stop();
+                if (round == 1)
+                {
+                    XDocument xdoc = new XDocument();
+                    XElement round1 = new XElement("round");
+                    XAttribute roundname = new XAttribute("name", "1");
+                    XElement fish1 = new XElement("OrangeFish", kof);
+                    XElement speedfish1 = new XElement("OrangeSpeed", spof);
+                    round1.Add(roundname);
+                    round1.Add(fish1);
+                    round1.Add(speedfish1);
+
+                    XElement run = new XElement("run");
+
+                    run.Add(round1);
+
+                    xdoc.Add(run);
+
+                    xdoc.Save("fishing.xml");
+                }
                 round++;
-
-                
-
             }
         }
             private void start_Click(object sender, RoutedEventArgs e)
         {
+            round = 1;
             menu.Visibility = Visibility.Hidden;
             scene.Visibility = Visibility.Visible;
 
@@ -194,7 +212,7 @@ namespace fishing
 
                 for (int j = 0; j < i; j++)
                 {
-                    if ((x == f[j].strpos.X) && (y == f[j].strpos.Y))
+                    while ((x == f[j].strpos.X) && (y == f[j].strpos.Y))
                     {
                         x = rnd.Next(100, 850);
                         y = rnd.Next(100, 850);
