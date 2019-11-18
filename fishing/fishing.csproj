@@ -96,13 +96,25 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="image\ryba1.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="image\fish_fon.jpg" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="image\vodr.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="image\ff_set.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="image\ff_1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="image\ff_2.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="image\ff_start.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="image\ff_kol.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -47,21 +47,20 @@ namespace fishing
             //public int x, y, X, Y, dx, dy;
             public SPoint finpos = new SPoint();
             public SPoint strpos = new SPoint(); 
-            public SPoint dir = new SPoint();  
             Rectangle fsh { get; set; }
             ImageBrush ib = new ImageBrush();
             int kl { get; set; }
-            int speed { get; set; }
             
-            public fish(int x, int y, int sp, ref Canvas scene)
+            
+            public fish(int x, int y, ref Canvas scene, string iname)
             {
                 this.finpos.X = this.strpos.X = x;
                 this.finpos.Y = this.strpos.Y = y;
-                this.speed = sp;
+                
 
 
                 fsh = new Rectangle();
-                fsh.Width = 70;
+                fsh.Width = 50;
                 fsh.Height = 70;
 
                 ib.AlignmentX = AlignmentX.Left;
@@ -71,7 +70,7 @@ namespace fishing
                 ib.Viewbox = new Rect(0, 0, 0, 0);
                 ib.ViewboxUnits = BrushMappingMode.Absolute;
 
-                ib.ImageSource = new BitmapImage(new Uri(@"pack://application:,,,/image/ryba1.png", UriKind.Absolute));
+                ib.ImageSource = new BitmapImage(new Uri(iname, UriKind.Absolute));
 
                 fsh.Fill = ib;
 
@@ -79,7 +78,7 @@ namespace fishing
 
                 scene.Children.Add(fsh);
             }
-            
+
 
             //void step()
             //{
@@ -91,30 +90,55 @@ namespace fishing
             //    finpos.X = finpos.X + dir.X * r;
             //    finpos.Y = finpos.Y + dir.Y * r;
             //}
-            //public void updatePos()
-            //{
-            //    if ((finpos.X == strpos.X) && (finpos.Y == strpos.Y))
-            //    {
-            //        step();
-            //    }
+            public void move(int X, int Y)
+            {
+               if (X < strpos.X)
+               {
+                    strpos.X -= 1;
+                    ib.Viewbox = new Rect(65, 0, 0, 0);
+                    fsh.Width = 70;
+                    fsh.Height = 50;
+                }
+               if (X > strpos.X)
+               {
+                    strpos.X += 1;
+                    ib.Viewbox = new Rect(0, 0, 0, 0);
+                    fsh.Width = 70;
+                    fsh.Height = 50;
+                }
+               if (Y < strpos.Y)
+               {
+                    strpos.Y -= 1;
+                    ib.Viewbox = new Rect(133, 0, 0, 0);
+                    fsh.Width = 50;
+                    fsh.Height = 70;
 
-            //    if (strpos.X < finpos.X) { strpos.X += 1; }
-            //    if (strpos.X > finpos.X) { strpos.X -= 1; }
-            //    if (strpos.Y < finpos.Y) { strpos.Y += 1; }
-            //    if (strpos.Y > finpos.Y) { strpos.Y -= 1; }
+                }
+               if (Y > strpos.Y)
+               {
+                    strpos.Y += 1;
+                    ib.Viewbox = new Rect(183, 0, 0, 0);
+                    fsh.Width = 50;
+                    fsh.Height = 70;
 
+                }
+                fsh.Fill = ib;
+                fsh.RenderTransform = new TranslateTransform(strpos.X, strpos.Y);
 
-            //    fsh.RenderTransform = new TranslateTransform(strpos.X, strpos.Y);
-            //}
+            }
         }
 
         public class seaweed
         {
-            Rectangle weed;
+            public int X, Y;
+            public Rectangle weed;
             ImageBrush ib = new ImageBrush();
 
             public seaweed(int x, int y, ref Canvas scene)
             {
+                this.X = x;
+                this.Y = y;
+
                 weed = new Rectangle();
                 weed.Width = 70;
                 weed.Height = 70;
@@ -138,12 +162,15 @@ namespace fishing
         }
 
         
-        seaweed w;
-        Random rnd = new Random();
-        int klw, kof, kbf, spof, spbf, round;
         
-
+        Random rnd = new Random();
+        int klw, kof, kbf, round, ind; 
+        double dist,min = 1100;
+        List<fish> of, bf;
+        List<seaweed> s;
+        
         System.Windows.Threading.DispatcherTimer Timer;
+        System.Windows.Threading.DispatcherTimer Timer2;
         public MainWindow()
         {
             InitializeComponent();
@@ -152,25 +179,80 @@ namespace fishing
             Timer.Tick += new EventHandler(dispatcherTimer_Tick);
             Timer.Interval = new TimeSpan(0, 0, 0, 0, 1);
 
-          
+            Timer2 = new System.Windows.Threading.DispatcherTimer();
+            Timer2.Tick += new EventHandler(dispatcherTimer_Tick2);
+            Timer2.Interval = new TimeSpan(0, 0, 0, 0, 2);
+
+
         }
+        private void dispatcherTimer_Tick2(object sender, EventArgs e)
+        {
+            foreach (fish fs in bf)
+            {
+                foreach (seaweed sw in s.ToArray())
+                {
+                    dist = Math.Sqrt(Math.Pow(fs.strpos.X - sw.X, 2) + Math.Pow(fs.strpos.Y - sw.Y, 2));
+                    ind = s.IndexOf(sw);
+
+                    if (min > dist)
+                    {
+                        min = dist;
+                        fs.finpos.X = sw.X;
+                        fs.finpos.Y = sw.Y;
+
+                    }
+                    if ((fs.finpos.X == fs.strpos.X) && (fs.finpos.Y == fs.strpos.Y))
+                    {
+                        scene.Children.Remove(sw.weed);
+                        s.Remove(sw);
+                    }
+
+                }
+                fs.move(fs.finpos.X, fs.finpos.Y);
+            }
+        }
+
 
         private void dispatcherTimer_Tick(object sender, EventArgs e)
         {
+            foreach (fish ofs in of)
+            {
+                foreach (seaweed sw in s.ToArray())
+                {
+                    dist = Math.Sqrt(Math.Pow(ofs.strpos.X - sw.X, 2) + Math.Pow(ofs.strpos.Y - sw.Y, 2));
+
+                    if (min > dist)
+                    {
+                        min = dist;
+                        ofs.finpos.X = sw.X;
+                        ofs.finpos.Y = sw.Y;
+
+                    }
+                    if ((ofs.finpos.X == ofs.strpos.X) && (ofs.finpos.Y == ofs.strpos.Y))
+                    {
+                        scene.Children.Remove(sw.weed);
+                        s.Remove(sw);
+                    }
+
+                }
+
+                ofs.move(ofs.finpos.X, ofs.finpos.Y);
+            }
             //f.updatePos();
-            if (klw == 0)
+            if (s.Count == 0)
             {
                 Timer.Stop();
+                Timer2.Stop();
                 if (round == 1)
                 {
                     XDocument xdoc = new XDocument();
                     XElement round1 = new XElement("round");
                     XAttribute roundname = new XAttribute("name", "1");
                     XElement fish1 = new XElement("OrangeFish", kof);
-                    XElement speedfish1 = new XElement("OrangeSpeed", spof);
+                   
                     round1.Add(roundname);
                     round1.Add(fish1);
-                    round1.Add(speedfish1);
+                   
 
                     XElement run = new XElement("run");
 
@@ -183,46 +265,68 @@ namespace fishing
                 round++;
             }
         }
+
+      
             private void start_Click(object sender, RoutedEventArgs e)
-        {
-            round = 1;
-            menu.Visibility = Visibility.Hidden;
-            scene.Visibility = Visibility.Visible;
-
-            klw = int.Parse(kol_weed.Text);
-            kof = int.Parse(OFish.Text);
-            spof = int.Parse(spO.Text);
-
-            List<fish> f = new List<fish>(kof);
-
-            for (int i = 0; i < klw; i++)
             {
-                int wx = rnd.Next(100, 850);
-                int wy = rnd.Next(100, 850);
+                round = 1;
+                menu.Visibility = Visibility.Hidden;
+                scene.Visibility = Visibility.Visible;
 
-                w = new seaweed(wx, wy, ref scene);
-                
-            }
+                klw = int.Parse(kol_weed.Text);
+                kof = int.Parse(OFish.Text);
+                kbf = int.Parse(BFish.Text);
 
-            for (int i = 0; i < kof; i++)
-            {
+                bf = new List<fish>(kbf);
+                of = new List<fish>(kof);
+                s = new List<seaweed>(klw);
 
-                int x = rnd.Next(100, 850);
-                int y = rnd.Next(100, 850);
-
-                for (int j = 0; j < i; j++)
+                for (int i = 0; i < klw; i++)
                 {
-                    while ((x == f[j].strpos.X) && (y == f[j].strpos.Y))
-                    {
-                        x = rnd.Next(100, 850);
-                        y = rnd.Next(100, 850);
-                    }
+                    int wx = rnd.Next(100, 850);
+                    int wy = rnd.Next(100, 850);
+
+                    s.Add(new seaweed(wx, wy, ref scene));
                 }
 
-                f.Add(new fish(x, y, spof, ref scene));
-            }
+                for (int i = 0; i < kof; i++)
+                {
+
+                    int x = rnd.Next(100, 850);
+                    int y = rnd.Next(100, 850);
+
+                    for (int j = 0; j < i; j++)
+                    {
+                        while ((x == of[j].strpos.X) && (y == of[j].strpos.Y))
+                        {
+                        x = rnd.Next(100, 850);
+                        y = rnd.Next(100, 850);
+                        }
+                    }
+
+                    of.Add(new fish(x, y, ref scene, @"pack://application:,,,/image/ff_1.png"));
+                }
+
+                for (int i = 0; i < kbf; i++)
+                {
+
+                    int x = rnd.Next(100, 850);
+                    int y = rnd.Next(100, 850);
+
+                    for (int j = 0; j < i; j++)
+                    {
+                        while ((x == bf[j].strpos.X) && (y == bf[j].strpos.Y))
+                        {
+                            x = rnd.Next(100, 850);
+                            y = rnd.Next(100, 850);
+                        }
+                    }
+
+                    bf.Add(new fish(x, y, ref scene, @"pack://application:,,,/image/ff_2.png"));
+                }
 
             Timer.Start();
+            Timer2.Start();
         }
     }
 }
