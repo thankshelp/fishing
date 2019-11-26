@@ -8,6 +8,6 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("image/ff_kol.png")]
+[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("stats.xml")]
 
 

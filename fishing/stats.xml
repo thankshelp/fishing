@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<simulation>
+  <round number="System.Xml.XmlElement">
+    <OrangeFish>1</OrangeFish>
+    <BlueFish>3</BlueFish>
+  </round>
+  <round number="System.Xml.XmlElement">
+    <OrangeFish>1</OrangeFish>
+    <BlueFish>1</BlueFish>
+  </round>
+</simulation>

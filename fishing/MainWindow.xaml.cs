@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,7 +13,10 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Xml;
 using System.Xml.Linq;
+using OxyPlot;
+using OxyPlot.Series;
 
 
 namespace fishing
@@ -23,39 +27,21 @@ namespace fishing
     public partial class MainWindow : Window
     {
         //условие изменения направления и пофиксить штуку с расстоянием
-        public class SPoint
-        {
-            public int X { get; set; }
-            public int Y { get; set; }
-
-            public SPoint()
-            {
-                X = 0;
-                Y = 0;
-            }
-
-            public static SPoint operator +(SPoint a, SPoint b)
-            {
-                SPoint r = new SPoint();
-                r.X = a.X + b.X;
-                r.Y = a.Y + b.Y;
-                return r;
-            }
-        }
+        
         public class fish
         {
-            //public int x, y, X, Y, dx, dy;
-            public SPoint finpos = new SPoint();
-            public SPoint strpos = new SPoint(); 
-            Rectangle fsh { get; set; }
+            public int fx, fy, kkal = 0;
+            //public SPoint finpos = new SPoint();
+            //public SPoint strpos = new SPoint(); 
+            public Rectangle fsh { get; set; }
             ImageBrush ib = new ImageBrush();
             int kl { get; set; }
             
             
             public fish(int x, int y, ref Canvas scene, string iname)
             {
-                this.finpos.X = this.strpos.X = x;
-                this.finpos.Y = this.strpos.Y = y;
+                this.fx = x;
+                this.fy = y;
                 
 
 
@@ -79,65 +65,45 @@ namespace fishing
                 scene.Children.Add(fsh);
             }
 
-
-            //void step()
-            //{
-            //    int r = new Random().Next(900);
-            //    while ((finpos.X + dir.X * r > 900) && (finpos.X + dir.X * r < 100) && (finpos.Y + dir.Y * r > 900) && (finpos.Y + dir.Y * r < 100))
-            //    {
-            //        r = new Random().Next(100, 900);
-            //    }
-            //    finpos.X = finpos.X + dir.X * r;
-            //    finpos.Y = finpos.Y + dir.Y * r;
-            //}
             public void move(int X, int Y)
             {
-               if (X < strpos.X)
+               if (X < fx)
                {
-                    strpos.X -= 1;
-                    ib.Viewbox = new Rect(65, 0, 0, 0);
-                    fsh.Width = 70;
-                    fsh.Height = 50;
-                }
-               if (X > strpos.X)
+                    fx -= 1;
+                    ib.Viewbox = new Rect(60, 0, 0, 0);
+               }
+
+               if (X > fx)
                {
-                    strpos.X += 1;
+                    fx += 1;
                     ib.Viewbox = new Rect(0, 0, 0, 0);
-                    fsh.Width = 70;
-                    fsh.Height = 50;
-                }
-               if (Y < strpos.Y)
+               }
+               if (Y < fy)
                {
-                    strpos.Y -= 1;
-                    ib.Viewbox = new Rect(133, 0, 0, 0);
-                    fsh.Width = 50;
-                    fsh.Height = 70;
-
-                }
-               if (Y > strpos.Y)
+                    fy -= 1;
+                    ib.Viewbox = new Rect(106, 0, 0, 0);
+               }
+               if (Y > fy)
                {
-                    strpos.Y += 1;
-                    ib.Viewbox = new Rect(183, 0, 0, 0);
-                    fsh.Width = 50;
-                    fsh.Height = 70;
-
-                }
+                   fy += 1;
+                    ib.Viewbox = new Rect(155, 0, 0, 0);
+               }
                 fsh.Fill = ib;
-                fsh.RenderTransform = new TranslateTransform(strpos.X, strpos.Y);
+                fsh.RenderTransform = new TranslateTransform(fx, fy);
 
             }
         }
 
         public class seaweed
         {
-            public int X, Y;
+            public int sx, sy;
             public Rectangle weed;
             ImageBrush ib = new ImageBrush();
 
             public seaweed(int x, int y, ref Canvas scene)
             {
-                this.X = x;
-                this.Y = y;
+                this.sx = x;
+                this.sy = y;
 
                 weed = new Rectangle();
                 weed.Width = 70;
@@ -164,11 +130,80 @@ namespace fishing
         
         
         Random rnd = new Random();
-        int klw, kof, kbf, round, ind; 
-        double dist,min = 1100;
-        List<fish> of, bf;
+        int klw, kof, kbf, round, seaweeds;
+        int tx, ty;
+        double dist;
+        List<fish> of, bf, allf;
         List<seaweed> s;
-        
+        graphs graf = new graphs();
+
+        private void graph_Click(object sender, RoutedEventArgs e)
+        {
+            XDocument xdoc = XDocument.Load("C:\\Users\\Виктория\\Desktop\\fishing\\fishing\\stats.xml");
+
+            foreach(XElement elem in xdoc.Element("simulation").Elements("round"))
+            {
+                XAttribute attrName = elem.Attribute("round");
+                XElement ofcount = elem.Element("OrangeFish");
+                XElement bfcount = elem.Element("BlueFish");
+
+                if (attrName != null && ofcount != null && bfcount != null)
+                {
+                    DataPoint point1 = new DataPoint(double.Parse(attrName.Value), double.Parse(ofcount.Value));
+                    DataPoint point2 = new DataPoint(double.Parse(attrName.Value), double.Parse(bfcount.Value));
+                    graf.orangef.Add(point1);
+                    graf.bluef.Add(point2);
+                }
+                
+            }
+
+            gf.Visibility = Visibility.Visible;
+        }
+
+        private void next_Click(object sender, RoutedEventArgs e)
+        {
+            next.Visibility = Visibility.Hidden;
+            graph.Visibility = Visibility.Hidden;
+            round++;
+            lb.Content = "Round\n" + round;
+
+            for (int i = 0; i < klw; i++)
+            {
+                int wx = rnd.Next(100, 850);
+                int wy = rnd.Next(100, 850);
+
+                s.Add(new seaweed(wx, wy, ref scene));
+            }
+
+            XmlDocument xdoc = new XmlDocument();
+            xdoc.Load("C:\\Users\\Виктория\\Desktop\\fishing\\fishing\\stats.xml");
+            XmlElement xRoot = xdoc.DocumentElement;
+
+            XmlElement rounds = xdoc.CreateElement("round");
+            XmlAttribute roundname = xdoc.CreateAttribute("number");
+
+            XmlElement fish1 = xdoc.CreateElement("OrangeFish");
+            XmlElement fish2 = xdoc.CreateElement("BlueFish");
+
+
+            XmlText roundnum = xdoc.CreateTextNode(rounds.ToString());
+            XmlText fishes1 = xdoc.CreateTextNode(of.Count().ToString());
+            XmlText fishes2 = xdoc.CreateTextNode(bf.Count().ToString());
+
+            roundname.AppendChild(roundnum);
+            fish1.AppendChild(fishes1);
+            fish2.AppendChild(fishes2);
+            rounds.Attributes.Append(roundname);
+            rounds.AppendChild(fish1);
+            rounds.AppendChild(fish2);
+            xRoot.AppendChild(rounds);
+
+            xdoc.Save("C:\\Users\\Виктория\\Desktop\\fishing\\fishing\\stats.xml");
+
+            Timer.Start();
+            Timer2.Start();
+        }
+
         System.Windows.Threading.DispatcherTimer Timer;
         System.Windows.Threading.DispatcherTimer Timer2;
         public MainWindow()
@@ -181,149 +216,300 @@ namespace fishing
 
             Timer2 = new System.Windows.Threading.DispatcherTimer();
             Timer2.Tick += new EventHandler(dispatcherTimer_Tick2);
-            Timer2.Interval = new TimeSpan(0, 0, 0, 0, 2);
+            Timer2.Interval = new TimeSpan(0, 0, 0, 0, 20);
 
 
         }
         private void dispatcherTimer_Tick2(object sender, EventArgs e)
         {
+            int curfish = -1;
             foreach (fish fs in bf)
             {
-                foreach (seaweed sw in s.ToArray())
+                double min = 1100;
+                int curweed = -1;
+                curfish++;
                 {
-                    dist = Math.Sqrt(Math.Pow(fs.strpos.X - sw.X, 2) + Math.Pow(fs.strpos.Y - sw.Y, 2));
-                    ind = s.IndexOf(sw);
-
-                    if (min > dist)
+                    foreach (seaweed sw in s)
                     {
-                        min = dist;
-                        fs.finpos.X = sw.X;
-                        fs.finpos.Y = sw.Y;
+                        curweed++;
+                        dist = Math.Sqrt(Math.Pow(fs.fx - sw.sx, 2) + Math.Pow(fs.fy - sw.sy, 2));
+
+                        if (min > dist)
+                        {
+                            min = dist;
+                            tx = sw.sx;
+                            ty = sw.sy;
+                            seaweeds = curweed;
+                        }
+                        if ((fs.fx == sw.sx) && (fs.fy == sw.sy))
+                        {
+                            scene.Children.Remove(sw.weed);
+                            fs.kkal++;
+                        }
 
                     }
-                    if ((fs.finpos.X == fs.strpos.X) && (fs.finpos.Y == fs.strpos.Y))
+                    try
                     {
-                        scene.Children.Remove(sw.weed);
-                        s.Remove(sw);
+                        if ((fs.fx == tx) && (fs.fy == ty))
+                        {
+                            s.RemoveAt(seaweeds);
+                        }
                     }
+                    catch (ArgumentOutOfRangeException)
+                    {
 
+                    }
+                    fs.move(tx, ty);
                 }
-                fs.move(fs.finpos.X, fs.finpos.Y);
             }
-        }
-
-
-        private void dispatcherTimer_Tick(object sender, EventArgs e)
-        {
-            foreach (fish ofs in of)
-            {
-                foreach (seaweed sw in s.ToArray())
-                {
-                    dist = Math.Sqrt(Math.Pow(ofs.strpos.X - sw.X, 2) + Math.Pow(ofs.strpos.Y - sw.Y, 2));
-
-                    if (min > dist)
-                    {
-                        min = dist;
-                        ofs.finpos.X = sw.X;
-                        ofs.finpos.Y = sw.Y;
-
-                    }
-                    if ((ofs.finpos.X == ofs.strpos.X) && (ofs.finpos.Y == ofs.strpos.Y))
-                    {
-                        scene.Children.Remove(sw.weed);
-                        s.Remove(sw);
-                    }
-
-                }
-
-                ofs.move(ofs.finpos.X, ofs.finpos.Y);
-            }
-            //f.updatePos();
             if (s.Count == 0)
             {
                 Timer.Stop();
                 Timer2.Stop();
-                if (round == 1)
+                foreach (fish all in allf)
                 {
-                    XDocument xdoc = new XDocument();
-                    XElement round1 = new XElement("round");
-                    XAttribute roundname = new XAttribute("name", "1");
-                    XElement fish1 = new XElement("OrangeFish", kof);
-                   
-                    round1.Add(roundname);
-                    round1.Add(fish1);
-                   
-
-                    XElement run = new XElement("run");
-
-                    run.Add(round1);
-
-                    xdoc.Add(run);
-
-                    xdoc.Save("fishing.xml");
+                    int del = -1;
+                    int cur = -1;
+                    foreach (fish fs in bf)
+                    {
+                        cur++;
+                        if (fs.kkal < 2)
+                        {
+                            del = cur;
+                            scene.Children.Remove(fs.fsh);
+                        }
+                    }
+                    if (del != -1)
+                    {
+                        bf.RemoveAt(del);
+                    }
                 }
-                round++;
+                foreach (fish all in allf)
+                {
+                    int del = -1;
+                    int cur = -1;
+                    foreach (fish fs in of)
+                    {
+                        cur++;
+                        if (fs.kkal == 0)
+                        {
+                            del = cur;
+                            scene.Children.Remove(fs.fsh);
+                        }
+                    }
+                    if (del != -1)
+                    {
+                        bf.RemoveAt(del);
+                    }
+                }
+                foreach (fish f in bf)
+                {
+                    f.kkal = 0;
+                }
+                foreach (fish f in of)
+                {
+                    f.kkal = 0;
+                }
+                next.Visibility = Visibility.Visible;
+                graph.Visibility = Visibility.Visible;
             }
         }
 
-      
-            private void start_Click(object sender, RoutedEventArgs e)
+        private void dispatcherTimer_Tick(object sender, EventArgs e)
+        {
+            int curfish = -1;
+            foreach (fish ofs in of)
             {
-                round = 1;
-                menu.Visibility = Visibility.Hidden;
-                scene.Visibility = Visibility.Visible;
+                double min = 1100;
+                int curweed = -1;
+                curfish++;
+                
+               foreach (seaweed sw in s)
+               {
+                    curweed++;
+                    dist = Math.Sqrt(Math.Pow(ofs.fx - sw.sx, 2) + Math.Pow(ofs.fy - sw.sy, 2));
 
-                klw = int.Parse(kol_weed.Text);
-                kof = int.Parse(OFish.Text);
-                kbf = int.Parse(BFish.Text);
+                    if (min > dist)
+                    {
+                        min = dist;
+                        tx = sw.sx;
+                        ty = sw.sy;
+                        seaweeds = curweed;
 
-                bf = new List<fish>(kbf);
-                of = new List<fish>(kof);
-                s = new List<seaweed>(klw);
+                    }
+                    if ((ofs.fx == sw.sx) && (ofs.fy == sw.sy))
+                    {
+                        scene.Children.Remove(sw.weed);
+                        ofs.kkal++;
+                    }
 
-                for (int i = 0; i < klw; i++)
+               }
+                try
                 {
-                    int wx = rnd.Next(100, 850);
-                    int wy = rnd.Next(100, 850);
+                    if (( ofs.fx == tx) &&(ofs.fy == ty))
+                    {
+                        s.RemoveAt(seaweeds);
+                    }
+                }
+                catch (ArgumentOutOfRangeException)
+                {
 
-                    s.Add(new seaweed(wx, wy, ref scene));
                 }
 
-                for (int i = 0; i < kof; i++)
+                ofs.move(tx, ty);
+            }
+           
+            if (s.Count == 0)
+            {
+                Timer.Stop();
+                Timer2.Stop();
+                foreach (fish all in allf)
                 {
-
-                    int x = rnd.Next(100, 850);
-                    int y = rnd.Next(100, 850);
-
-                    for (int j = 0; j < i; j++)
+                    int del = -1;
+                    int cur = -1;
+                    foreach (fish fs in bf)
                     {
-                        while ((x == of[j].strpos.X) && (y == of[j].strpos.Y))
+                        cur++;
+                        if (fs.kkal < 2)
                         {
+                            del = cur;
+                            scene.Children.Remove(fs.fsh);
+                        }
+                    }
+                    if (del != -1)
+                    {
+                        bf.RemoveAt(del);
+                    }
+                }
+                foreach (fish all in allf)
+                {
+                    int del = -1;
+                    int cur = -1;
+                    foreach (fish fs in of)
+                    {
+                        cur++;
+                        if (fs.kkal == 0)
+                        {
+                            del = cur;
+                            scene.Children.Remove(fs.fsh);
+                        }
+                    }
+                    if (del != -1)
+                    {
+                        bf.RemoveAt(del);
+                    }
+                }
+                foreach(fish f in bf)
+                {
+                    f.kkal = 0;
+                }
+                foreach(fish f in of)
+                {
+                    f.kkal = 0;
+                }
+                next.Visibility = Visibility.Visible;
+                graph.Visibility = Visibility.Visible;
+            }
+        }
+        
+        private void start_Click(object sender, RoutedEventArgs e)
+        {
+            round = 1;
+            menu.Visibility = Visibility.Hidden;
+            scene.Visibility = Visibility.Visible;
+
+            lb.Content = "Round\n" + round;
+            
+
+            klw = int.Parse(kol_weed.Text);
+            kof = int.Parse(OFish.Text);
+            kbf = int.Parse(BFish.Text);
+
+
+            allf = new List<fish>(kbf+kof);
+            bf = new List<fish>(kbf);
+            of = new List<fish>(kof);
+            s = new List<seaweed>(klw);
+
+            for (int i = 0; i < klw; i++)
+            {
+                int wx = rnd.Next(100, 850);
+                int wy = rnd.Next(100, 850);
+
+                s.Add(new seaweed(wx, wy, ref scene));
+            }
+
+            for (int i = 0; i < kof; i++)
+            {
+
+                int x = rnd.Next(100, 850);
+                int y = rnd.Next(100, 850);
+
+                for (int j = 0; j < i; j++)
+                {
+                     while ((x == of[j].fx) && (y == of[j].fy))
+                     {
                         x = rnd.Next(100, 850);
                         y = rnd.Next(100, 850);
-                        }
-                    }
-
-                    of.Add(new fish(x, y, ref scene, @"pack://application:,,,/image/ff_1.png"));
+                     }
                 }
 
-                for (int i = 0; i < kbf; i++)
+                of.Add(new fish(x, y, ref scene, @"pack://application:,,,/image/ff_1.png"));
+                   
+            }
+
+            for (int i = 0; i < kbf; i++)
+            { 
+
+                int x = rnd.Next(100, 850);
+                int y = rnd.Next(100, 850);
+
+                for (int j = 0; j < i; j++)
                 {
-
-                    int x = rnd.Next(100, 850);
-                    int y = rnd.Next(100, 850);
-
-                    for (int j = 0; j < i; j++)
+                    while ((x == bf[j].fx) && (y == bf[j].fy))
                     {
-                        while ((x == bf[j].strpos.X) && (y == bf[j].strpos.Y))
-                        {
-                            x = rnd.Next(100, 850);
-                            y = rnd.Next(100, 850);
-                        }
+                        x = rnd.Next(100, 850);
+                        y = rnd.Next(100, 850);
                     }
-
-                    bf.Add(new fish(x, y, ref scene, @"pack://application:,,,/image/ff_2.png"));
                 }
+
+                bf.Add(new fish(x, y, ref scene, @"pack://application:,,,/image/ff_2.png"));
+                    
+            }
+
+            foreach(fish f in bf)
+            {
+                allf.Add(f);
+            }
+            foreach (fish f in of)
+            {
+                allf.Add(f);
+            }
+
+            XmlDocument xdoc = new XmlDocument();
+            xdoc.Load("C:\\Users\\Виктория\\Desktop\\fishing\\fishing\\stats.xml");
+            XmlElement xRoot = xdoc.DocumentElement;
+
+            XmlElement rounds = xdoc.CreateElement("round");
+            XmlAttribute roundname = xdoc.CreateAttribute("number");
+
+            XmlElement fish1 = xdoc.CreateElement("OrangeFish");
+            XmlElement fish2 = xdoc.CreateElement("BlueFish");
+
+
+            XmlText roundnum = xdoc.CreateTextNode(rounds.ToString());
+            XmlText fishes1 = xdoc.CreateTextNode(of.Count().ToString());
+            XmlText fishes2 = xdoc.CreateTextNode(bf.Count().ToString());
+
+            roundname.AppendChild(roundnum);
+            fish1.AppendChild(fishes1);
+            fish2.AppendChild(fishes2);
+            rounds.Attributes.Append(roundname);
+            rounds.AppendChild(fish1);
+            rounds.AppendChild(fish2);
+            xRoot.AppendChild(rounds);
+
+            xdoc.Save("C:\\Users\\Виктория\\Desktop\\fishing\\fishing\\stats.xml");
 
             Timer.Start();
             Timer2.Start();

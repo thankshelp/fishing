@@ -41,3 +41,9 @@ D:\Программирование\fishing\fishing\obj\Debug\fishing.csproj.Gen
 D:\Программирование\fishing\fishing\obj\Debug\fishing.csproj.CoreCompileInputs.cache
 D:\Программирование\fishing\fishing\obj\Debug\fishing.exe
 D:\Программирование\fishing\fishing\obj\Debug\fishing.pdb
+C:\Users\Виктория\Desktop\fishing\fishing\bin\Debug\OxyPlot.dll
+C:\Users\Виктория\Desktop\fishing\fishing\bin\Debug\OxyPlot.Wpf.dll
+C:\Users\Виктория\Desktop\fishing\fishing\bin\Debug\OxyPlot.xml
+C:\Users\Виктория\Desktop\fishing\fishing\bin\Debug\OxyPlot.Wpf.xml
+C:\Users\Виктория\Desktop\fishing\fishing\obj\Debug\fishing.csproj.CopyComplete
+C:\Users\Виктория\Desktop\fishing\fishing\obj\Debug\GeneratedInternalTypeHelper.g.cs

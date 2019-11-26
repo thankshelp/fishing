@@ -4,10 +4,15 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:fishing"
+        xmlns:local1="clr-namespace:fishing"
+        xmlns:oxy="http://oxyplot.org/wpf"
         mc:Ignorable="d"
         Title="MainWindow" Height="1018" Width="1000">
+    <Window.DataContext>
+        <local1:graphs/>
+    </Window.DataContext>
     <Grid>
-        <Grid x:Name="menu" HorizontalAlignment="Left" Height="1000" Margin="-4,-4,-2.4,0" VerticalAlignment="Top" Width="1000" Visibility="Visible">
+        <Grid x:Name="menu" HorizontalAlignment="Left" Height="1000" Margin="-4,-4,-2.4,0" VerticalAlignment="Top" Width="1000">
             <Grid.Background>
                 <ImageBrush ImageSource="image/ff_set.png"/>
             </Grid.Background>
@@ -16,12 +21,12 @@
                     <ImageBrush ImageSource="image/ff_kol.png"/>
                 </TextBox.Background>
             </TextBox>
-            <TextBox x:Name="OFish" HorizontalAlignment="Left" Height="93" Margin="326,463,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="348" FontSize="48" TextAlignment="Center">
+            <TextBox x:Name="OFish" HorizontalAlignment="Left" Height="93" Margin="326,629,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="348" FontSize="48" TextAlignment="Center">
                 <TextBox.Background>
                     <ImageBrush ImageSource="image/ff_kol.png"/>
                 </TextBox.Background>
             </TextBox>
-            <TextBox x:Name="BFish" HorizontalAlignment="Left" Height="92" Margin="326,629,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="348" TextAlignment="Center" FontSize="48">
+            <TextBox x:Name="BFish" HorizontalAlignment="Left" Height="92" Margin="326,463,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="348" TextAlignment="Center" FontSize="48">
                 <TextBox.Background>
                     <ImageBrush ImageSource="image/ff_kol.png"/>
                 </TextBox.Background>
@@ -36,8 +41,19 @@
             <Canvas.Background>
                 <ImageBrush ImageSource="image/fish_fon.jpg"/>
             </Canvas.Background>
+            <Button x:Name="next" Content="Next round" Width="174" Canvas.Left="722" Canvas.Top="32" Height="44" Visibility="Hidden" Click="next_Click"/>
+            <Button x:Name="graph" Content="График" Width="174" Canvas.Left="100" Canvas.Top="32" Height="44" Visibility="Hidden" Click="graph_Click"/>
+            <Label x:Name="lb" Content="" Canvas.Left="450" Canvas.Top="32" Height="64" Width="98" FontSize="18"/>
         </Canvas>
+
+        <Grid x:Name="gf" HorizontalAlignment="Left" Height="799" VerticalAlignment="Top" Width="798" Margin="97,97,0,0" Visibility="Hidden">
+            <oxy:Plot Title="{Binding Title}" Margin="24,0,10,48" d:IsHidden="True">
+                <oxy:LineSeries ItemsSource="{Binding orangef}"/>
+                <oxy:LineSeries ItemsSource="{Binding bluef}"/>
+            </oxy:Plot>
+        </Grid>
     </Grid>
+
 
 
 
