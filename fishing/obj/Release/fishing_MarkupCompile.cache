@@ -4,11 +4,11 @@
 winexe
 C#
 .cs
-C:\Users\Андрей\Source\Repos\fishing1\fishing\obj\Debug\
+C:\Users\Андрей\Source\Repos\fishing1\fishing\obj\Release\
 fishing
 none
 false
-DEBUG;TRACE
+TRACE
 C:\Users\Андрей\Source\Repos\fishing1\fishing\App.xaml
 11151548125
 
@@ -16,5 +16,5 @@ C:\Users\Андрей\Source\Repos\fishing1\fishing\App.xaml
 17-1794240664
 MainWindow.xaml;
 
-False
+True
 

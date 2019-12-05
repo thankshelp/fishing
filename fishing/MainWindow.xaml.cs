@@ -139,18 +139,18 @@ namespace fishing
 
         private void graph_Click(object sender, RoutedEventArgs e)
         {
-            XDocument xdoc = XDocument.Load("C:\\Users\\Виктория\\Desktop\\fishing\\fishing\\stats.xml");
+            XDocument xdoc = XDocument.Load("C:\\Users\\Андрей\\source\\repos\\fishing1\\fishing\\stats.xml");
 
-            foreach(XElement elem in xdoc.Element("simulation").Elements("round"))
+            foreach (XElement elem in xdoc.Element("simulation").Elements("round"))
             {
-                XAttribute attrName = elem.Attribute("round");
+                XAttribute roundname = elem.Attribute("round");
                 XElement ofcount = elem.Element("OrangeFish");
                 XElement bfcount = elem.Element("BlueFish");
 
-                if (attrName != null && ofcount != null && bfcount != null)
+                if (roundname != null && ofcount != null && bfcount != null)
                 {
-                    DataPoint point1 = new DataPoint(double.Parse(attrName.Value), double.Parse(ofcount.Value));
-                    DataPoint point2 = new DataPoint(double.Parse(attrName.Value), double.Parse(bfcount.Value));
+                    DataPoint point1 = new DataPoint(double.Parse(roundname.Value), double.Parse(ofcount.Value));
+                    DataPoint point2 = new DataPoint(double.Parse(roundname.Value), double.Parse(bfcount.Value));
                     graf.orangef.Add(point1);
                     graf.bluef.Add(point2);
                 }
@@ -176,7 +176,7 @@ namespace fishing
             }
 
             XmlDocument xdoc = new XmlDocument();
-            xdoc.Load("C:\\Users\\Виктория\\Desktop\\fishing\\fishing\\stats.xml");
+            xdoc.Load("C:\\Users\\Андрей\\source\\repos\\fishing1\\fishing\\stats.xml");
             XmlElement xRoot = xdoc.DocumentElement;
 
             XmlElement rounds = xdoc.CreateElement("round");
@@ -186,7 +186,7 @@ namespace fishing
             XmlElement fish2 = xdoc.CreateElement("BlueFish");
 
 
-            XmlText roundnum = xdoc.CreateTextNode(rounds.ToString());
+            XmlText roundnum = xdoc.CreateTextNode(round.ToString());
             XmlText fishes1 = xdoc.CreateTextNode(of.Count().ToString());
             XmlText fishes2 = xdoc.CreateTextNode(bf.Count().ToString());
 
@@ -198,7 +198,7 @@ namespace fishing
             rounds.AppendChild(fish2);
             xRoot.AppendChild(rounds);
 
-            xdoc.Save("C:\\Users\\Виктория\\Desktop\\fishing\\fishing\\stats.xml");
+            xdoc.Save("C:\\Users\\Андрей\\source\\repos\\fishing1\\fishing\\stats.xml");
 
             Timer.Start();
             Timer2.Start();
@@ -299,7 +299,7 @@ namespace fishing
                     }
                     if (del != -1)
                     {
-                        bf.RemoveAt(del);
+                        of.RemoveAt(del);
                     }
                 }
                 foreach (fish f in bf)
@@ -394,10 +394,10 @@ namespace fishing
                             scene.Children.Remove(fs.fsh);
                         }
                     }
-                    if (del != -1)
-                    {
-                        bf.RemoveAt(del);
-                    }
+                   // if (del != -1)
+                   // {
+                   //     bf.RemoveAt(del);
+                   // }
                 }
                 foreach(fish f in bf)
                 {
@@ -487,7 +487,7 @@ namespace fishing
             }
 
             XmlDocument xdoc = new XmlDocument();
-            xdoc.Load("C:\\Users\\Виктория\\Desktop\\fishing\\fishing\\stats.xml");
+            xdoc.Load("C:\\Users\\Андрей\\source\\repos\\fishing1\\fishing\\stats.xml");
             XmlElement xRoot = xdoc.DocumentElement;
 
             XmlElement rounds = xdoc.CreateElement("round");
@@ -497,7 +497,7 @@ namespace fishing
             XmlElement fish2 = xdoc.CreateElement("BlueFish");
 
 
-            XmlText roundnum = xdoc.CreateTextNode(rounds.ToString());
+            XmlText roundnum = xdoc.CreateTextNode(round.ToString());
             XmlText fishes1 = xdoc.CreateTextNode(of.Count().ToString());
             XmlText fishes2 = xdoc.CreateTextNode(bf.Count().ToString());
 
@@ -509,7 +509,7 @@ namespace fishing
             rounds.AppendChild(fish2);
             xRoot.AppendChild(rounds);
 
-            xdoc.Save("C:\\Users\\Виктория\\Desktop\\fishing\\fishing\\stats.xml");
+            xdoc.Save("C:\\Users\\Андрей\\source\\repos\\fishing1\\fishing\\stats.xml");
 
             Timer.Start();
             Timer2.Start();

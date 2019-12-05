@@ -13,29 +13,30 @@ namespace fishing
         public string Title { get; private set; }
         public IList<DataPoint> orangef { get; private set; }
         public IList<DataPoint> bluef { get; private set; }
-       
+        public IList<DataPoint> tango { get; private set; }
 
         public graphs()
         {
             Title = "Ribolucia";
             orangef = new List<DataPoint>();
             bluef = new List<DataPoint>();
-
-            XDocument xdoc = XDocument.Load("C:\\Users\\Виктория\\Desktop\\fishing\\fishing\\stats.xml");
+            tango = new List<DataPoint>();
+            XDocument xdoc = XDocument.Load("C:\\Users\\Андрей\\source\\repos\\fishing1\\fishing\\stats.xml");
 
             foreach (XElement elem in xdoc.Element("simulation").Elements("round"))
             {
-                XAttribute attrName = elem.Attribute("round");
+                XAttribute roundname = elem.Attribute("number");
                 XElement ofcount = elem.Element("OrangeFish");
                 XElement bfcount = elem.Element("BlueFish");
-
-                if (attrName != null && ofcount != null && bfcount != null)
+                double tcount = 30;
+                if (roundname != null && ofcount != null && bfcount != null)
                 {
-                    DataPoint point1 = new DataPoint(double.Parse(attrName.Value), double.Parse(ofcount.Value));
-                    DataPoint point2 = new DataPoint(double.Parse(attrName.Value), double.Parse(bfcount.Value));
-
+                    DataPoint point1 = new DataPoint(double.Parse(roundname.Value), double.Parse(ofcount.Value));
+                    DataPoint point2 = new DataPoint(double.Parse(roundname.Value), double.Parse(bfcount.Value));
+                    DataPoint point3 = new DataPoint(double.Parse(roundname.Value), tcount);
                     orangef.Add(point1);
                     bluef.Add(point2);
+                    tango.Add(point3);
                 }
             }
         }
