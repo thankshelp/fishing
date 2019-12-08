@@ -36,6 +36,7 @@ namespace fishing
             public Rectangle fsh { get; set; }
             ImageBrush ib = new ImageBrush();
             int kl { get; set; }
+            Rect rect;
             
             
             public fish(int x, int y, ref Canvas scene, string iname)
@@ -61,6 +62,8 @@ namespace fishing
                 fsh.Fill = ib;
 
                 fsh.RenderTransform = new TranslateTransform(x, y);
+
+                rect = fsh.RenderTransform.TransformBounds(fsh.RenderedGeometry.Bounds);
 
                 scene.Children.Add(fsh);
             }
@@ -139,7 +142,7 @@ namespace fishing
 
         private void graph_Click(object sender, RoutedEventArgs e)
         {
-            XDocument xdoc = XDocument.Load("C:\\Users\\Андрей\\source\\repos\\fishing1\\fishing\\stats.xml");
+            XDocument xdoc = XDocument.Load("D:\\Program\\fishing\\fishing\\stats.xml");
 
             foreach (XElement elem in xdoc.Element("simulation").Elements("round"))
             {
@@ -164,6 +167,8 @@ namespace fishing
         {
             next.Visibility = Visibility.Hidden;
             graph.Visibility = Visibility.Hidden;
+            gf.Visibility = Visibility.Hidden;
+
             round++;
             lb.Content = "Round\n" + round;
 
@@ -176,7 +181,7 @@ namespace fishing
             }
 
             XmlDocument xdoc = new XmlDocument();
-            xdoc.Load("C:\\Users\\Андрей\\source\\repos\\fishing1\\fishing\\stats.xml");
+            xdoc.Load("D:\\Program\\fishing\\fishing\\stats.xml");
             XmlElement xRoot = xdoc.DocumentElement;
 
             XmlElement rounds = xdoc.CreateElement("round");
@@ -198,7 +203,7 @@ namespace fishing
             rounds.AppendChild(fish2);
             xRoot.AppendChild(rounds);
 
-            xdoc.Save("C:\\Users\\Андрей\\source\\repos\\fishing1\\fishing\\stats.xml");
+            xdoc.Save("D:\\Program\\fishing\\fishing\\stats.xml");
 
             Timer.Start();
             Timer2.Start();
@@ -228,26 +233,25 @@ namespace fishing
                 double min = 1100;
                 int curweed = -1;
                 curfish++;
+                foreach (seaweed sw in s)
                 {
-                    foreach (seaweed sw in s)
+                    curweed++;
+                    dist = Math.Sqrt(Math.Pow(fs.fx - sw.sx, 2) + Math.Pow(fs.fy - sw.sy, 2));
+
+                    if (min > dist)
                     {
-                        curweed++;
-                        dist = Math.Sqrt(Math.Pow(fs.fx - sw.sx, 2) + Math.Pow(fs.fy - sw.sy, 2));
-
-                        if (min > dist)
-                        {
-                            min = dist;
-                            tx = sw.sx;
-                            ty = sw.sy;
-                            seaweeds = curweed;
-                        }
-                        if ((fs.fx == sw.sx) && (fs.fy == sw.sy))
-                        {
-                            scene.Children.Remove(sw.weed);
-                            fs.kkal++;
-                        }
-
+                        min = dist;
+                        tx = sw.sx;
+                        ty = sw.sy;
+                        seaweeds = curweed;
                     }
+                    if ((fs.fx == sw.sx) && (fs.fy == sw.sy))
+                    {
+                        scene.Children.Remove(sw.weed);
+                        fs.kkal++;
+                    }
+
+                }
                     try
                     {
                         if ((fs.fx == tx) && (fs.fy == ty))
@@ -260,7 +264,7 @@ namespace fishing
 
                     }
                     fs.move(tx, ty);
-                }
+                
             }
             if (s.Count == 0)
             {
@@ -487,7 +491,7 @@ namespace fishing
             }
 
             XmlDocument xdoc = new XmlDocument();
-            xdoc.Load("C:\\Users\\Андрей\\source\\repos\\fishing1\\fishing\\stats.xml");
+            xdoc.Load("D:\\Program\\fishing\\fishing\\stats.xml");
             XmlElement xRoot = xdoc.DocumentElement;
 
             XmlElement rounds = xdoc.CreateElement("round");
@@ -509,7 +513,7 @@ namespace fishing
             rounds.AppendChild(fish2);
             xRoot.AppendChild(rounds);
 
-            xdoc.Save("C:\\Users\\Андрей\\source\\repos\\fishing1\\fishing\\stats.xml");
+            xdoc.Save("D:\\Program\\fishing\\fishing\\stats.xml");
 
             Timer.Start();
             Timer2.Start();

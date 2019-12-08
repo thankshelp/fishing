@@ -1,19 +1,4 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <simulation>
-  <round number="1">
-    <OrangeFish>10</OrangeFish>
-    <BlueFish>10</BlueFish>
-  </round>
-  <round number="2">
-    <OrangeFish>10</OrangeFish>
-    <BlueFish>1</BlueFish>
-  </round>
-  <round number="3">
-    <OrangeFish>10</OrangeFish>
-    <BlueFish>0</BlueFish>
-  </round>
-  <round number="1">
-    <OrangeFish>1</OrangeFish>
-    <BlueFish>1</BlueFish>
-  </round>
+ 
 </simulation>

@@ -21,7 +21,7 @@ namespace fishing
             orangef = new List<DataPoint>();
             bluef = new List<DataPoint>();
             tango = new List<DataPoint>();
-            XDocument xdoc = XDocument.Load("C:\\Users\\Андрей\\source\\repos\\fishing1\\fishing\\stats.xml");
+            XDocument xdoc = XDocument.Load("D:\\Program\\fishing\\fishing\\stats.xml");
 
             foreach (XElement elem in xdoc.Element("simulation").Elements("round"))
             {

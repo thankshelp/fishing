@@ -127,7 +127,15 @@
     <Resource Include="image\ff_2.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="stats.xml" />
+    <Resource Include="stats.xml">
+      <SubType>Designer</SubType>
+    </Resource>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="image\grafik.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="image\dalee.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

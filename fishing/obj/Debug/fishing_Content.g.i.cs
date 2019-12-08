@@ -8,6 +8,6 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("stats.xml")]
+[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("image/dalee.png")]
 
 

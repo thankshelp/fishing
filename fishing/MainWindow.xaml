@@ -8,6 +8,63 @@
         xmlns:oxy="http://oxyplot.org/wpf"
         mc:Ignorable="d"
         Title="MainWindow" Height="1018" Width="1000">
+    <Window.Resources>
+        <Style x:Key="FocusVisual">
+            <Setter Property="Control.Template">
+                <Setter.Value>
+                    <ControlTemplate>
+                        <Rectangle Margin="2" SnapsToDevicePixels="true" Stroke="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}" StrokeThickness="1" StrokeDashArray="1 2"/>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <SolidColorBrush x:Key="Button.Static.Background" Color="#FFDDDDDD"/>
+        <SolidColorBrush x:Key="Button.Static.Border" Color="#FF707070"/>
+        <SolidColorBrush x:Key="Button.MouseOver.Background" Color="#FFBEE6FD"/>
+        <SolidColorBrush x:Key="Button.MouseOver.Border" Color="#FF3C7FB1"/>
+        <SolidColorBrush x:Key="Button.Pressed.Background" Color="#FFC4E5F6"/>
+        <SolidColorBrush x:Key="Button.Pressed.Border" Color="#FF2C628B"/>
+        <SolidColorBrush x:Key="Button.Disabled.Background" Color="#FFF4F4F4"/>
+        <SolidColorBrush x:Key="Button.Disabled.Border" Color="#FFADB2B5"/>
+        <SolidColorBrush x:Key="Button.Disabled.Foreground" Color="#FF838383"/>
+        <Style x:Key="Style" TargetType="{x:Type Button}">
+            <Setter Property="FocusVisualStyle" Value="{StaticResource FocusVisual}"/>
+            <Setter Property="Background" Value="{StaticResource Button.Static.Background}"/>
+            <Setter Property="BorderBrush" Value="{StaticResource Button.Static.Border}"/>
+            <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="Padding" Value="1"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <Border x:Name="border" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" SnapsToDevicePixels="true">
+                            <ContentPresenter x:Name="contentPresenter" Focusable="False" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="{TemplateBinding Padding}" RecognizesAccessKey="True" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsDefaulted" Value="true">
+                                <Setter Property="BorderBrush" TargetName="border" Value="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}"/>
+                            </Trigger>
+                            <!--<Trigger Property="IsMouseOver" Value="true">
+                                <Setter Property="Background" TargetName="border" Value="{StaticResource Button.MouseOver.Background}"/>
+                                <Setter Property="BorderBrush" TargetName="border" Value="{StaticResource Button.MouseOver.Border}"/>
+                            </Trigger>-->
+                            <!--<Trigger Property="IsPressed" Value="true">
+                                <Setter Property="Background" TargetName="border" Value="{StaticResource Button.Pressed.Background}"/>
+                                <Setter Property="BorderBrush" TargetName="border" Value="{StaticResource Button.Pressed.Border}"/>
+                            </Trigger>-->
+                            <Trigger Property="IsEnabled" Value="false">
+                                <Setter Property="Background" TargetName="border" Value="{StaticResource Button.Disabled.Background}"/>
+                                <Setter Property="BorderBrush" TargetName="border" Value="{StaticResource Button.Disabled.Border}"/>
+                                <Setter Property="TextElement.Foreground" TargetName="contentPresenter" Value="{StaticResource Button.Disabled.Foreground}"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
     <Window.DataContext>
         <local:graphs/>
     </Window.DataContext>
@@ -31,7 +88,7 @@
                     <ImageBrush ImageSource="image/ff_kol.png"/>
                 </TextBox.Background>
             </TextBox>
-            <Button x:Name="start" Content="" HorizontalAlignment="Left" VerticalAlignment="Top" Width="348" Click="start_Click" Canvas.Left="58" Canvas.Top="51" Height="92" Margin="652,297,0,0">
+            <Button x:Name="start" Content="" HorizontalAlignment="Left" VerticalAlignment="Top" Width="348" Click="start_Click" Canvas.Left="58" Canvas.Top="51" Height="92" Margin="326,769,0,0" Style="{DynamicResource Style}">
                 <Button.Background>
                     <ImageBrush ImageSource="image/ff_start.png"/>
                 </Button.Background>
@@ -41,9 +98,17 @@
             <Canvas.Background>
                 <ImageBrush ImageSource="image/fish_fon.jpg"/>
             </Canvas.Background>
-            <Button x:Name="next" Content="Next round" Width="174" Canvas.Left="722" Canvas.Top="32" Height="44" Visibility="Hidden" Click="next_Click"/>
-            <Button x:Name="graph" Content="График" Width="174" Canvas.Left="100" Canvas.Top="32" Height="44" Visibility="Hidden" Click="graph_Click"/>
-            <Label x:Name="lb" Content="" Canvas.Left="450" Canvas.Top="32" Height="64" Width="98" FontSize="18"/>
+            <Button x:Name="next" Content="" Width="174" Canvas.Left="726" Canvas.Top="27" Height="56" Click="next_Click" Style="{DynamicResource Style}" Visibility="Hidden">
+                <Button.Background>
+                    <ImageBrush ImageSource="image/dalee.png"/>
+                </Button.Background>
+            </Button>
+            <Button x:Name="graph" Content="" Width="174" Canvas.Left="99" Canvas.Top="27" Height="56" Click="graph_Click" Style="{DynamicResource Style}" Visibility="Hidden">
+                <Button.Background>
+                    <ImageBrush ImageSource="image/grafik.png"/>
+                </Button.Background>
+            </Button>
+            <Label x:Name="lb" Content="" Canvas.Left="450" Canvas.Top="27" Height="64" Width="98" FontSize="18"/>
         </Canvas>
 
         <Grid x:Name="gf" HorizontalAlignment="Left" Height="500" VerticalAlignment="Top" Width="500" Margin="97,97,0,0" Visibility="Hidden">
